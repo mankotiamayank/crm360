@@ -1,5 +1,5 @@
 import express from 'express';
-import { getLeads, createLead, updateLead, deleteLead } from '../controllers/leadcontroller.js'; 
+import { getLeads, createLead, updateLead, deleteLead } from '../controllers/leadController.js'; 
 import { protect } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();

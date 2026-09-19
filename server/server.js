@@ -15,9 +15,9 @@ app.use(express.json());
 // 3. Import Routes 
 import authRoutes from './routes/authRoutes.js';
 import customerRoutes from './routes/customerRoutes.js';
-import leadRoutes from './routes/leadroutes.js';
-import taskRoutes from './routes/taskroutes.js';
-import statRoutes from './routes/statroutes.js';
+import leadRoutes from './routes/leadRoutes.js';
+import taskRoutes from './routes/taskRoutes.js';
+import statRoutes from './routes/statRoutes.js';
 
 // 4. Register Routes
 app.use('/api/auth', authRoutes);
