@@ -3,9 +3,43 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 
+// ---> NEW IMPORTS FOR AUTO-SEED <---
+import User from './models/user.js';
+import Customer from './models/customer.js';
+
 // 1. Load variables and connect to the REAL database
 dotenv.config();
 connectDB();
+
+// ---> NEW AUTO-SEED FUNCTION <---
+const autoSeed = async () => {
+  try {
+    const userCount = await User.countDocuments();
+    if (userCount === 0) {
+      console.log('🌱 Database is empty. Auto-seeding initial data...');
+      const users = await User.create([
+        { name: 'Admin Alice', email: 'admin@test.com', password: 'password123', role: 'Admin' },
+        { name: 'Manager Bob', email: 'manager@test.com', password: 'password123', role: 'Sales Manager' },
+        { name: 'Executive Charlie', email: 'exec@test.com', password: 'password123', role: 'Sales Executive' }
+      ]);
+
+      await Customer.create({
+        name: 'John Doe',
+        company: 'Tech Corp',
+        email: 'john@techcorp.com',
+        phone: '555-1234',
+        user: users[2]._id,
+        assignedTo: users[2]._id
+      });
+      console.log('✅ Auto-seed completed successfully!');
+    }
+  } catch (err) {
+    console.error('Auto-seed error:', err.message);
+  }
+};
+
+// ---> CALL THE FUNCTION <---
+autoSeed();
 
 // 2. Initialize Express
 const app = express();
