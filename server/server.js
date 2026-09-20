@@ -3,7 +3,6 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 
-// ---> NEW IMPORTS FOR AUTO-SEED <---
 import User from './models/user.js';
 import Customer from './models/customer.js';
 
@@ -11,7 +10,7 @@ import Customer from './models/customer.js';
 dotenv.config();
 connectDB();
 
-// ---> NEW AUTO-SEED FUNCTION <---
+// The autoSeed function is kept here for reference but disabled below
 const autoSeed = async () => {
   try {
     const userCount = await User.countDocuments();
@@ -38,8 +37,8 @@ const autoSeed = async () => {
   }
 };
 
-// ---> CALL THE FUNCTION <---
-autoSeed();
+// ---> AUTO-SEED DISABLED FOR PRODUCTION <---
+// autoSeed(); 
 
 // 2. Initialize Express
 const app = express();

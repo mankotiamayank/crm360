@@ -1,16 +1,30 @@
-# React + Vite
+# CRM360 - Full Stack CRM Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A complete, full-stack Customer Relationship Management application built with the MERN stack.
 
-Currently, two official plugins are available:
+## 🚀 Live Demo & Access
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The application is fully deployed and connected to a live cloud database. You can test the live environment here:
 
-## React Compiler
+* **Live Application:** [https://crm360-frontend-xxxx.onrender.com] *(<- Replace this with your actual Render frontend link)*
+* **Live API Backend:** https://crm360-backend-cdsb.onrender.com
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 🔑 Reviewer Test Credentials
+To quickly explore the live dashboard and test database interactions without registering a new account, please log in with these seeded credentials:
 
-## Expanding the Oxlint configuration
+* **Email:** `manager@test.com`
+* **Password:** `password123`
+* **Role:** Sales Manager
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+---
+
+## 🛠️ Tech Stack
+* **Frontend:** React.js, Tailwind CSS, Vite
+* **Backend:** Node.js, Express.js
+* **Database:** MongoDB Atlas
+* **Deployment:** Render (Web Services & Static Site), GitHub
+
+## 📌 Core Features
+* Secure user authentication and session management.
+* Full CRUD operations for Customers, Leads, and Tasks.
+* Connected cloud database with real-time data persistence.
