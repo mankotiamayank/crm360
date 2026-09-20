@@ -17,7 +17,7 @@ const Dashboard = () => {
     const fetchStats = async () => {
       try {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
-        const res = await axios.get('http://localhost:5000/api/stats', config);
+        const res = await axios.get('https://crm360-backend-cdsb.onrender.com/api/stats', config);
         setStats(res.data);
       } catch (error) {
         console.error('Error fetching dashboard stats:', error);

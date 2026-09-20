@@ -17,7 +17,7 @@ const Leads = () => {
   const fetchLeads = async () => {
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
-      const res = await axios.get('http://localhost:5000/api/leads', config);
+      const res = await axios.get('https://crm360-backend-cdsb.onrender.com/api/leads', config);
       setLeads(Array.isArray(res.data) ? res.data : []);
     } catch (error) {
       toast.error('Failed to load leads');
@@ -54,10 +54,10 @@ const Leads = () => {
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
       if (editingId) {
-        await axios.put(`http://localhost:5000/api/leads/${editingId}`, formData, config);
+        await axios.put(`https://crm360-backend-cdsb.onrender.com/api/leads/${editingId}`, formData, config);
         toast.success('Lead updated successfully!', { id: toastId });
       } else {
-        await axios.post('http://localhost:5000/api/leads', formData, config);
+        await axios.post('https://crm360-backend-cdsb.onrender.com/api/leads', formData, config);
         toast.success('Lead added successfully!', { id: toastId });
       }
       fetchLeads();
@@ -75,7 +75,7 @@ const Leads = () => {
       const toastId = toast.loading('Deleting lead...');
       try {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
-        await axios.delete(`http://localhost:5000/api/leads/${id}`, config);
+        await axios.delete(`https://crm360-backend-cdsb.onrender.com/api/leads/${id}`, config);
         toast.success('Lead deleted!', { id: toastId });
         fetchLeads();
       } catch (error) {

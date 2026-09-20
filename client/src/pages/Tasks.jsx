@@ -17,7 +17,7 @@ const Tasks = () => {
   const fetchTasks = async () => {
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
-      const res = await axios.get('http://localhost:5000/api/tasks', config);
+      const res = await axios.get('https://crm360-backend-cdsb.onrender.com/api/tasks', config);
       setTasks(Array.isArray(res.data) ? res.data : []);
     } catch (error) {
       toast.error('Failed to load tasks');
@@ -52,10 +52,10 @@ const Tasks = () => {
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
       if (editingId) {
-        await axios.put(`http://localhost:5000/api/tasks/${editingId}`, formData, config);
+        await axios.put(`https://crm360-backend-cdsb.onrender.com/api/tasks/${editingId}`, formData, config);
         toast.success('Task updated successfully!', { id: toastId });
       } else {
-        await axios.post('http://localhost:5000/api/tasks', formData, config);
+        await axios.post('https://crm360-backend-cdsb.onrender.com/api/tasks', formData, config);
         toast.success('Task added successfully!', { id: toastId });
       }
       fetchTasks();
@@ -73,7 +73,7 @@ const Tasks = () => {
       const toastId = toast.loading('Deleting task...');
       try {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
-        await axios.delete(`http://localhost:5000/api/tasks/${id}`, config);
+        await axios.delete(`https://crm360-backend-cdsb.onrender.com/api/tasks/${id}`, config);
         toast.success('Task deleted!', { id: toastId });
         fetchTasks();
       } catch (error) {
@@ -87,7 +87,7 @@ const Tasks = () => {
     const newStatus = task.status === 'Completed' ? 'Pending' : 'Completed';
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
-      await axios.put(`http://localhost:5000/api/tasks/${task._id}`, { status: newStatus }, config);
+      await axios.put(`https://crm360-backend-cdsb.onrender.com/api/tasks/${task._id}`, { status: newStatus }, config);
       toast.success(`Task marked as ${newStatus}`);
       fetchTasks();
     } catch (error) {

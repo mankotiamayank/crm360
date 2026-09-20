@@ -42,9 +42,9 @@ const GlobalSearch = () => {
         
         // 🚨 NEW: allSettled ensures that if one database fails, the others still load perfectly!
         const [custRes, leadRes, taskRes] = await Promise.allSettled([
-          axios.get('http://localhost:5000/api/customers', config),
-          axios.get('http://localhost:5000/api/leads', config),
-          axios.get('http://localhost:5000/api/tasks', config)
+          axios.get('https://crm360-backend-cdsb.onrender.com/api/customers', config),
+          axios.get('https://crm360-backend-cdsb.onrender.com/api/leads', config),
+          axios.get('https://crm360-backend-cdsb.onrender.com/api/tasks', config)
         ]);
 
         // Helper function to safely extract data even if the format is weird
