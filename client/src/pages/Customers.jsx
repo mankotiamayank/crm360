@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext.jsx';
+import { useNotification } from '../context/NotificationContext.jsx';
 import { Building2, Mail, Phone, X, Edit2, Trash2, Search, UserPlus, Users, ArrowUpRight, Sparkles } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
 import { API_BASE_URL } from '../config/api.js';
@@ -9,6 +10,7 @@ const Customers = () => {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useContext(AuthContext);
+  const { addNotification } = useNotification();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
@@ -54,9 +56,21 @@ const Customers = () => {
       if (editingId) {
         await axios.put(`${API_BASE_URL}/api/customers/${editingId}`, formData, config);
         toast.success('Customer updated successfully!', { id: toastId });
+        addNotification?.({
+          title: 'Account Record Updated',
+          message: `${formData.name}'s profile details were refreshed.`,
+          type: 'customer',
+          link: '/customers'
+        });
       } else {
         await axios.post(`${API_BASE_URL}/api/customers`, formData, config);
         toast.success('Customer added successfully!', { id: toastId });
+        addNotification?.({
+          title: 'New Account Onboarded',
+          message: `${formData.name} was added to the client directory.`,
+          type: 'customer',
+          link: '/customers'
+        });
       }
       fetchCustomers();
       closeModal();
@@ -75,6 +89,12 @@ const Customers = () => {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
         await axios.delete(`${API_BASE_URL}/api/customers/${id}`, config);
         toast.success('Customer deleted!', { id: toastId });
+        addNotification?.({
+          title: 'Customer Removed',
+          message: 'A customer directory record was permanently removed.',
+          type: 'customer',
+          link: '/customers'
+        });
         fetchCustomers();
       } catch (error) {
         const backendError = error.response?.data?.error || error.response?.data?.message || 'Unknown Server Error';

@@ -1,6 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext.jsx';
+import ProfileModal from './ProfileModal.jsx';
 import { 
   LayoutDashboard, 
   Users, 
@@ -15,6 +16,7 @@ import {
 const Sidebar = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -99,7 +101,12 @@ const Sidebar = () => {
       {/* User Footer Profile & Logout */}
       <div className="p-3 border-t border-slate-800/60 bg-slate-950/40">
         <div className="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800/80 flex items-center justify-between">
-          <div className="flex items-center space-x-3 min-w-0">
+          <button 
+            type="button"
+            onClick={() => setIsProfileOpen(true)}
+            className="flex items-center space-x-3 min-w-0 text-left hover:opacity-85 transition-opacity"
+            title="Open Profile & Role Command Center"
+          >
             <div className="relative">
               <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-white text-sm shadow-md">
                 {user?.name?.charAt(0) || 'U'}
@@ -113,7 +120,7 @@ const Sidebar = () => {
                 <p className="text-[11px] text-slate-400 truncate">{user?.role || 'Member'}</p>
               </div>
             </div>
-          </div>
+          </button>
 
           <button 
             onClick={handleLogout}
@@ -124,6 +131,11 @@ const Sidebar = () => {
           </button>
         </div>
       </div>
+
+      <ProfileModal 
+        isOpen={isProfileOpen} 
+        onClose={() => setIsProfileOpen(false)} 
+      />
     </aside>
   );
 };

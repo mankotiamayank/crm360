@@ -1,12 +1,16 @@
 import Customer from '../models/customer.js';
 
-// Get all customers
+// Get all customers (Role-aware: Admin & Sales Manager see all; Sales Executive sees own/assigned)
 export const getCustomers = async (req, res) => {
   try {
-    const customers = await Customer.find({ user: req.user._id }).sort({ createdAt: -1 });
+    const isElevated = req.user.role === 'Admin' || req.user.role === 'Sales Manager';
+    const filter = isElevated 
+      ? {} 
+      : { $or: [{ user: req.user._id }, { assignedTo: req.user._id }] };
+
+    const customers = await Customer.find(filter).sort({ createdAt: -1 });
     res.status(200).json(customers);
   } catch (error) {
-    // 🚨 Forces the exact error message back to the frontend
     res.status(500).json({ error: `GET ERROR: ${error.message}` });
   }
 };
@@ -19,12 +23,12 @@ export const createCustomer = async (req, res) => {
       name,
       email,
       phone,
-      user: req.user._id 
+      user: req.user._id,
+      assignedTo: req.user._id
     });
     const savedCustomer = await newCustomer.save();
     res.status(201).json(savedCustomer);
   } catch (error) {
-    // 🚨 Forces the exact error message back to the frontend
     res.status(500).json({ error: `POST ERROR: ${error.message}` });
   }
 };
@@ -35,8 +39,10 @@ export const updateCustomer = async (req, res) => {
     const customer = await Customer.findById(req.params.id);
     if (!customer) return res.status(404).json({ error: 'Customer not found' });
     
-    if (customer.user.toString() !== req.user._id.toString()) {
-      return res.status(401).json({ error: 'Not authorized' });
+    const isOwner = customer.user?.toString() === req.user._id.toString();
+    const isElevated = req.user.role === 'Admin' || req.user.role === 'Sales Manager';
+    if (!isOwner && !isElevated) {
+      return res.status(403).json({ error: 'Not authorized to modify this customer' });
     }
 
     const updatedCustomer = await Customer.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -52,8 +58,11 @@ export const deleteCustomer = async (req, res) => {
     const customer = await Customer.findById(req.params.id);
     if (!customer) return res.status(404).json({ error: 'Customer not found' });
 
-    if (customer.user.toString() !== req.user._id.toString()) {
-      return res.status(401).json({ error: 'Not authorized' });
+    // Only Admins or the owner can delete
+    const isOwner = customer.user?.toString() === req.user._id.toString();
+    const isAdmin = req.user.role === 'Admin';
+    if (!isOwner && !isAdmin) {
+      return res.status(403).json({ error: 'Only Admins or the record owner can delete customers' });
     }
 
     await customer.deleteOne();

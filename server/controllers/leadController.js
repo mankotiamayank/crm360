@@ -1,9 +1,12 @@
 import Lead from '../models/lead.js';
 
-// Get all leads
+// Get all leads (Role-aware: Admin & Sales Manager see company pipeline; Sales Executive sees own deals)
 export const getLeads = async (req, res) => {
   try {
-    const leads = await Lead.find({ user: req.user._id }).sort({ createdAt: -1 });
+    const isElevated = req.user.role === 'Admin' || req.user.role === 'Sales Manager';
+    const filter = isElevated ? {} : { user: req.user._id };
+
+    const leads = await Lead.find(filter).sort({ createdAt: -1 });
     res.status(200).json(leads);
   } catch (error) {
     console.error("Error in getLeads:", error);
@@ -37,13 +40,14 @@ export const createLead = async (req, res) => {
 export const updateLead = async (req, res) => {
   try {
     const lead = await Lead.findById(req.params.id);
-    
     if (!lead) {
       return res.status(404).json({ message: 'Lead not found' });
     }
 
-    if (lead.user.toString() !== req.user._id.toString()) {
-      return res.status(401).json({ message: 'Not authorized to update this lead' });
+    const isOwner = lead.user?.toString() === req.user._id.toString();
+    const isElevated = req.user.role === 'Admin' || req.user.role === 'Sales Manager';
+    if (!isOwner && !isElevated) {
+      return res.status(403).json({ message: 'Not authorized to update this lead' });
     }
 
     const updatedLead = await Lead.findByIdAndUpdate(
@@ -63,13 +67,14 @@ export const updateLead = async (req, res) => {
 export const deleteLead = async (req, res) => {
   try {
     const lead = await Lead.findById(req.params.id);
-    
     if (!lead) {
       return res.status(404).json({ message: 'Lead not found' });
     }
 
-    if (lead.user.toString() !== req.user._id.toString()) {
-      return res.status(401).json({ message: 'Not authorized to delete this lead' });
+    const isOwner = lead.user?.toString() === req.user._id.toString();
+    const isElevated = req.user.role === 'Admin' || req.user.role === 'Sales Manager';
+    if (!isOwner && !isElevated) {
+      return res.status(403).json({ message: 'Not authorized to delete this lead' });
     }
 
     await lead.deleteOne();

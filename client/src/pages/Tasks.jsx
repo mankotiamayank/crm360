@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext.jsx';
+import { useNotification } from '../context/NotificationContext.jsx';
 import { 
   Calendar, 
   CheckSquare, 
@@ -22,6 +23,7 @@ const Tasks = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useContext(AuthContext);
+  const { addNotification } = useNotification();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({ title: '', dueDate: '', status: 'Pending' });
@@ -69,9 +71,21 @@ const Tasks = () => {
       if (editingId) {
         await axios.put(`${API_BASE_URL}/api/tasks/${editingId}`, formData, config);
         toast.success('Task updated successfully!', { id: toastId });
+        addNotification?.({
+          title: 'Task Rescheduled',
+          message: `"${formData.title}" details updated.`,
+          type: 'task',
+          link: '/tasks'
+        });
       } else {
         await axios.post(`${API_BASE_URL}/api/tasks`, formData, config);
         toast.success('Task added successfully!', { id: toastId });
+        addNotification?.({
+          title: 'Task Scheduled',
+          message: `"${formData.title}" assigned to pipeline schedule.`,
+          type: 'task',
+          link: '/tasks'
+        });
       }
       fetchTasks();
       closeModal();
@@ -90,6 +104,12 @@ const Tasks = () => {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
         await axios.delete(`${API_BASE_URL}/api/tasks/${id}`, config);
         toast.success('Task deleted!', { id: toastId });
+        addNotification?.({
+          title: 'Task Dismissed',
+          message: 'A pipeline task was removed.',
+          type: 'task',
+          link: '/tasks'
+        });
         fetchTasks();
       } catch (error) {
         const backendError = error.response?.data?.error || error.response?.data?.message || 'Unknown Server Error';
@@ -104,6 +124,12 @@ const Tasks = () => {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
       await axios.put(`${API_BASE_URL}/api/tasks/${task._id}`, { status: newStatus }, config);
       toast.success(`Task marked as ${newStatus}`);
+      addNotification?.({
+        title: newStatus === 'Completed' ? 'Task Completed' : 'Task Reopened',
+        message: `"${task.title}" status marked as ${newStatus}.`,
+        type: 'task',
+        link: '/tasks'
+      });
       fetchTasks();
     } catch (error) {
       toast.error('Failed to update status');

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext.jsx';
+import { useNotification } from '../context/NotificationContext.jsx';
 import { 
   Briefcase, 
   Mail, 
@@ -22,6 +23,7 @@ const Leads = () => {
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useContext(AuthContext);
+  const { addNotification } = useNotification();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', company: '', estimatedValue: '', status: 'New' });
@@ -72,9 +74,21 @@ const Leads = () => {
       if (editingId) {
         await axios.put(`${API_BASE_URL}/api/leads/${editingId}`, formData, config);
         toast.success('Lead updated successfully!', { id: toastId });
+        addNotification?.({
+          title: 'Pipeline Stage Updated',
+          message: `${formData.name}'s deal status shifted to "${formData.status}".`,
+          type: 'lead',
+          link: '/leads'
+        });
       } else {
         await axios.post(`${API_BASE_URL}/api/leads`, formData, config);
         toast.success('Lead added successfully!', { id: toastId });
+        addNotification?.({
+          title: 'Deal Opportunity Logged',
+          message: `${formData.name} (${formData.company || 'Enterprise'}) valued at $${formData.estimatedValue || '0'} added.`,
+          type: 'lead',
+          link: '/leads'
+        });
       }
       fetchLeads();
       closeModal();
@@ -93,6 +107,12 @@ const Leads = () => {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
         await axios.delete(`${API_BASE_URL}/api/leads/${id}`, config);
         toast.success('Lead deleted!', { id: toastId });
+        addNotification?.({
+          title: 'Lead Opportunity Dismissed',
+          message: 'A pipeline lead was removed from tracking.',
+          type: 'lead',
+          link: '/leads'
+        });
         fetchLeads();
       } catch (error) {
         const backendError = error.response?.data?.error || error.response?.data?.message || 'Unknown Server Error';

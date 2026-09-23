@@ -121,15 +121,27 @@ const Dashboard = () => {
         <div className="absolute top-0 right-1/4 w-48 h-48 bg-purple-500/10 rounded-full blur-2xl pointer-events-none"></div>
 
         <div className="relative z-10">
-          <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-200 text-xs font-semibold mb-3">
-            <Sparkles size={13} className="text-blue-300" />
-            <span>Real-time Workspace Intelligence</span>
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-200 text-xs font-semibold">
+              <Sparkles size={13} className="text-blue-300" />
+              <span>Real-time Workspace Intelligence</span>
+            </div>
+            <span className="px-2.5 py-0.5 rounded-full bg-indigo-500/30 border border-indigo-400/40 text-indigo-200 text-xs font-bold">
+              {user?.role === 'Admin' ? '👑 Admin Mode (All Records)' :
+               user?.role === 'Sales Manager' ? '💼 Manager Mode (Team Pipeline)' :
+               '🎯 Executive Mode (Assigned Portfolio)'}
+            </span>
           </div>
+
           <h1 className="text-2xl lg:text-3xl font-black tracking-tight text-white">
             Welcome back, {user?.name || 'Administrator'}!
           </h1>
           <p className="text-slate-300 text-sm mt-1 max-w-xl">
-            Here is your executive CRM overview. Live conversion metrics and team pipeline are synchronizing smoothly.
+            {user?.role === 'Admin' 
+              ? 'You have complete administrative oversight over the entire company database, team members, and enterprise revenue.' 
+              : user?.role === 'Sales Manager' 
+              ? 'Monitor team conversion rates, stage velocity, and aggregate deal volume across all active reps.' 
+              : 'Focus on your assigned accounts, incoming prospects, and daily action items to meet your monthly quota.'}
           </p>
         </div>
 
