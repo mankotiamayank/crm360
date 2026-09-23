@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext } from '../context/AuthContext.jsx';
 import { Bell } from 'lucide-react';
 import GlobalSearch from './GlobalSearch.jsx';
 

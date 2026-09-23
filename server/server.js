@@ -59,6 +59,10 @@ app.use('/api/leads', leadRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/stats', statRoutes);
 
+app.get('/', (req, res) => {
+  res.send('CRM360 API is running successfully 🚀');
+});
+
 // 5. Start the Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

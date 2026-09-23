@@ -4,15 +4,11 @@ import { AuthContext } from '../context/AuthContext.jsx';
 import { LayoutDashboard, Users, Briefcase, CheckSquare, LogOut } from 'lucide-react';
 
 const Sidebar = () => {
-  const { dispatch } = useContext(AuthContext);
+  const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // 1. Remove user from local storage
-    localStorage.removeItem('user');
-    // 2. Update the React Context to null
-    dispatch({ type: 'LOGOUT' });
-    // 3. Send the user back to the login page
+    logout();
     navigate('/');
   };
 

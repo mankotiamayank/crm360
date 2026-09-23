@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 // 🚨 The curly braces here fix the "default export" crash!
 import { AuthContext } from '../context/AuthContext.jsx';
 import axios from 'axios';
+import { API_BASE_URL } from '../config/api.js';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -15,7 +16,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('https://crm360-backend-cdsb.onrender.com/api/auth/login', { email, password });
+      const res = await axios.post(`${API_BASE_URL}/api/auth/login`, { email, password });
       login(res.data);
       navigate('/dashboard');
     } catch (err) {

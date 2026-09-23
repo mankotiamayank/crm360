@@ -4,6 +4,7 @@ import { AuthContext } from '../context/AuthContext.jsx';
 import { Building2, Mail, Phone, X, Edit2, Trash2, Search } from 'lucide-react';
 // 🚨 NEW: Imported the Toast library
 import toast, { Toaster } from 'react-hot-toast';
+import { API_BASE_URL } from '../config/api.js';
 
 const Customers = () => {
   const [customers, setCustomers] = useState([]);
@@ -19,7 +20,7 @@ const Customers = () => {
   const fetchCustomers = async () => {
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
-      const res = await axios.get('https://crm360-backend-cdsb.onrender.com/api/customers', config);
+      const res = await axios.get(`${API_BASE_URL}/api/customers`, config);
       const data = Array.isArray(res.data) ? res.data : res.data.customers || [];
       setCustomers(data);
     } catch (error) {
@@ -54,10 +55,10 @@ const Customers = () => {
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
       if (editingId) {
-        await axios.put(`https://crm360-backend-cdsb.onrender.com/api/customers/${editingId}`, formData, config);
+        await axios.put(`${API_BASE_URL}/api/customers/${editingId}`, formData, config);
         toast.success('Customer updated successfully!', { id: toastId }); // 🚨 Success Toast
       } else {
-        await axios.post('https://crm360-backend-cdsb.onrender.com/api/customers', formData, config);
+        await axios.post(`${API_BASE_URL}/api/customers`, formData, config);
         toast.success('Customer added successfully!', { id: toastId }); // 🚨 Success Toast
       }
       fetchCustomers();
@@ -75,7 +76,7 @@ const Customers = () => {
       const toastId = toast.loading('Deleting customer...');
       try {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
-        await axios.delete(`https://crm360-backend-cdsb.onrender.com/api/customers/${id}`, config);
+        await axios.delete(`${API_BASE_URL}/api/customers/${id}`, config);
         toast.success('Customer deleted!', { id: toastId }); // 🚨 Success Toast
         fetchCustomers();
       } catch (error) {

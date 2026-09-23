@@ -8,9 +8,14 @@ export const AuthProvider = ({ children }) => {
 
   // Check if a user is already logged in when the page reloads
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    try {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser && storedUser !== 'undefined') {
+        setUser(JSON.parse(storedUser));
+      }
+    } catch (err) {
+      console.error('Error reading user from localStorage:', err);
+      localStorage.removeItem('user');
     }
   }, []);
 

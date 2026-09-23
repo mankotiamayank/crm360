@@ -3,6 +3,7 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext.jsx';
 import { Calendar, CheckSquare, X, Edit2, Trash2 } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
+import { API_BASE_URL } from '../config/api.js';
 
 const Tasks = () => {
   const [tasks, setTasks] = useState([]);
@@ -17,7 +18,7 @@ const Tasks = () => {
   const fetchTasks = async () => {
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
-      const res = await axios.get('https://crm360-backend-cdsb.onrender.com/api/tasks', config);
+      const res = await axios.get(`${API_BASE_URL}/api/tasks`, config);
       setTasks(Array.isArray(res.data) ? res.data : []);
     } catch (error) {
       toast.error('Failed to load tasks');
@@ -52,10 +53,10 @@ const Tasks = () => {
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
       if (editingId) {
-        await axios.put(`https://crm360-backend-cdsb.onrender.com/api/tasks/${editingId}`, formData, config);
+        await axios.put(`${API_BASE_URL}/api/tasks/${editingId}`, formData, config);
         toast.success('Task updated successfully!', { id: toastId });
       } else {
-        await axios.post('https://crm360-backend-cdsb.onrender.com/api/tasks', formData, config);
+        await axios.post(`${API_BASE_URL}/api/tasks`, formData, config);
         toast.success('Task added successfully!', { id: toastId });
       }
       fetchTasks();
@@ -73,7 +74,7 @@ const Tasks = () => {
       const toastId = toast.loading('Deleting task...');
       try {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
-        await axios.delete(`https://crm360-backend-cdsb.onrender.com/api/tasks/${id}`, config);
+        await axios.delete(`${API_BASE_URL}/api/tasks/${id}`, config);
         toast.success('Task deleted!', { id: toastId });
         fetchTasks();
       } catch (error) {
@@ -87,7 +88,7 @@ const Tasks = () => {
     const newStatus = task.status === 'Completed' ? 'Pending' : 'Completed';
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
-      await axios.put(`https://crm360-backend-cdsb.onrender.com/api/tasks/${task._id}`, { status: newStatus }, config);
+      await axios.put(`${API_BASE_URL}/api/tasks/${task._id}`, { status: newStatus }, config);
       toast.success(`Task marked as ${newStatus}`);
       fetchTasks();
     } catch (error) {

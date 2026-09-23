@@ -3,6 +3,7 @@ import { Search, User, Briefcase, CheckSquare } from 'lucide-react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../config/api.js';
 
 const GlobalSearch = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -42,9 +43,9 @@ const GlobalSearch = () => {
         
         // 🚨 NEW: allSettled ensures that if one database fails, the others still load perfectly!
         const [custRes, leadRes, taskRes] = await Promise.allSettled([
-          axios.get('https://crm360-backend-cdsb.onrender.com/api/customers', config),
-          axios.get('https://crm360-backend-cdsb.onrender.com/api/leads', config),
-          axios.get('https://crm360-backend-cdsb.onrender.com/api/tasks', config)
+          axios.get(`${API_BASE_URL}/api/customers`, config),
+          axios.get(`${API_BASE_URL}/api/leads`, config),
+          axios.get(`${API_BASE_URL}/api/tasks`, config)
         ]);
 
         // Helper function to safely extract data even if the format is weird

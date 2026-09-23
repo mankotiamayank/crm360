@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext.jsx';
 import { Users, Briefcase, CheckSquare, DollarSign, Activity } from 'lucide-react';
+import { API_BASE_URL } from '../config/api.js';
 
 const Dashboard = () => {
   const { user } = useContext(AuthContext);
@@ -17,7 +18,7 @@ const Dashboard = () => {
     const fetchStats = async () => {
       try {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
-        const res = await axios.get('https://crm360-backend-cdsb.onrender.com/api/stats', config);
+        const res = await axios.get(`${API_BASE_URL}/api/stats`, config);
         setStats(res.data);
       } catch (error) {
         console.error('Error fetching dashboard stats:', error);

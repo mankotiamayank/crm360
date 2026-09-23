@@ -3,6 +3,7 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext.jsx';
 import { Briefcase, Mail, DollarSign, X, Edit2, Trash2 } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
+import { API_BASE_URL } from '../config/api.js';
 
 const Leads = () => {
   const [leads, setLeads] = useState([]);
@@ -17,7 +18,7 @@ const Leads = () => {
   const fetchLeads = async () => {
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
-      const res = await axios.get('https://crm360-backend-cdsb.onrender.com/api/leads', config);
+      const res = await axios.get(`${API_BASE_URL}/api/leads`, config);
       setLeads(Array.isArray(res.data) ? res.data : []);
     } catch (error) {
       toast.error('Failed to load leads');
@@ -54,10 +55,10 @@ const Leads = () => {
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
       if (editingId) {
-        await axios.put(`https://crm360-backend-cdsb.onrender.com/api/leads/${editingId}`, formData, config);
+        await axios.put(`${API_BASE_URL}/api/leads/${editingId}`, formData, config);
         toast.success('Lead updated successfully!', { id: toastId });
       } else {
-        await axios.post('https://crm360-backend-cdsb.onrender.com/api/leads', formData, config);
+        await axios.post(`${API_BASE_URL}/api/leads`, formData, config);
         toast.success('Lead added successfully!', { id: toastId });
       }
       fetchLeads();
@@ -75,7 +76,7 @@ const Leads = () => {
       const toastId = toast.loading('Deleting lead...');
       try {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
-        await axios.delete(`https://crm360-backend-cdsb.onrender.com/api/leads/${id}`, config);
+        await axios.delete(`${API_BASE_URL}/api/leads/${id}`, config);
         toast.success('Lead deleted!', { id: toastId });
         fetchLeads();
       } catch (error) {
