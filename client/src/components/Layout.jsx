@@ -5,15 +5,15 @@ import Header from './Header.jsx';
 
 const Layout = () => {
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-[#f8fafc] text-slate-800 selection:bg-blue-500 selection:text-white antialiased">
       <Sidebar />
       
-      {/* 🚨 The ml-64 is the magic fix! It pushes the content to the right of the 64-width fixed sidebar */}
-      <div className="flex-1 ml-64 flex flex-col min-w-0">
+      {/* Main content wrapper shifted right to accommodate fixed sidebar */}
+      <div className="flex-1 ml-64 flex flex-col min-w-0 transition-all duration-300">
         <Header />
         
-        {/* overflow-x-auto ensures large tables never stretch off the screen */}
-        <main className="flex-1 p-8 overflow-x-auto">
+        {/* Main page container with soft subtle ambient glow and fluid max width */}
+        <main className="flex-1 p-6 lg:p-8 max-w-[1600px] w-full mx-auto">
           <Outlet />
         </main>
       </div>

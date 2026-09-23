@@ -6,9 +6,8 @@ import connectDB from './config/db.js';
 import User from './models/user.js';
 import Customer from './models/customer.js';
 
-// 1. Load variables and connect to the REAL database
+// 1. Load variables
 dotenv.config();
-connectDB();
 
 // The autoSeed function is kept here for reference but disabled below
 const autoSeed = async () => {
@@ -37,9 +36,6 @@ const autoSeed = async () => {
   }
 };
 
-// ---> AUTO-SEED DISABLED FOR PRODUCTION <---
-// autoSeed(); 
-
 // 2. Initialize Express
 const app = express();
 app.use(cors()); 
@@ -65,6 +61,17 @@ app.get('/', (req, res) => {
 
 // 5. Start the Server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running on port ${PORT}`);
-});
+
+const startServer = async () => {
+  try {
+    await connectDB();
+    await autoSeed();
+    app.listen(PORT, () => {
+      console.log(`🚀 Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error.message);
+  }
+};
+
+startServer();
